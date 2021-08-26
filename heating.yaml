@@ -86,8 +86,8 @@ action:
     - condition: not
       conditions:
       - condition: state
-        entity_id: !input 'groupname'
-        for: !input 'group_presence'
+        entity_id: !input 'person'
+        for: !input 'persons_presence'
         state: not_home
     sequence:
     - service: climate.set_preset_mode
