@@ -65,6 +65,7 @@ blueprint:
 
 variables:
   set_temp: !input set_temp
+  min_temp: !input min_temp
 
 trigger:
   - platform: homeassistant
@@ -98,8 +99,10 @@ action:
               hvac_mode: heat
               temperature: "{{ set_temp }}"
     default:
-      - service: climate.turn_off
+      - service: climate.set_temperature
         data:
           entity_id: !input 'heating'
+          hvac_mode: heat
+          temperature: "{{ min_temp }}"
 
 mode: single
