@@ -22,3 +22,84 @@ blueprint:
       default: []
       selector:
         entity:
+          domain: person
+    person2:
+      name: Person 2
+      description: The second person that has to be home.
+      default: []
+      selector:
+        entity:
+          domain: person
+    min_temp:
+      name: Minimum Temp
+      description: If temperature is below this value and someone is home, It turns heating on.
+      default: 15
+      selector:
+        number:
+          min: 15
+          max: 25
+          step: 1
+          mode: slider
+    set_temp:
+      name: Temperature Target
+      description: If the heating turns on, It heats to this target temperature.
+      default: 20
+      selector:
+        number:
+          min: 15
+          max: 25
+          step: 1
+          mode: slider
+    time_after:
+      name: Time After
+      description: After this time the heating turns on, so it's warm in the morning
+      default: '07:30:00'
+      selector:
+        time:
+    time_before:
+      name: Time Before
+      description: After this time the heating turns off, This to prevent the heating is on in the middle of the night
+      default: '21:30:00'
+      selector:
+        time:
+
+variables:
+  set_temp: !input set_temp
+
+trigger:
+  - platform: homeassistant
+    event: start
+  - platform: event
+    event_type: automation_reloaded
+  - platform: time_pattern
+    minutes: /10
+
+action:
+  - choose:
+      - conditions:
+          - condition: numeric_state
+            entity_id: !input 'temp_sensor'
+            below: !input min_temp
+          - condition: time
+            before: !input 'time_before'
+            after: !input 'time_after'
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: !input 'person1'
+                state: home
+              - condition: state
+                entity_id: !input 'person2'
+                state: home
+        sequence:
+          - service: climate.set_temperature
+            data:
+              entity_id: !input 'heating'
+              hvac_mode: heat
+              temperature: "{{ set_temp }}"
+    default:
+      - service: climate.turn_off
+        data:
+          entity_id: !input 'heating'
+
+mode: single
