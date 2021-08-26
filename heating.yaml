@@ -17,14 +17,14 @@ blueprint:
         entity:
           domain: sensor
           device_class: temperature
-    groupname:
+    person:
       name: Person Group
       description: The group of people that have to be home.
       default: []
       selector:
         entity:
-          domain: group
-    group_presence:
+          domain: person
+    persons_presence:
       name: Group Presence
       description: Heat only if Person of Group was present in a given amount of time (HH:MM:SS)
       default: 07:30:00
