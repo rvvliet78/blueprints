@@ -50,7 +50,7 @@ blueprint:
           max: 25
           step: 0.5
           mode: slider
-    lowset_temp:
+    setlow_temp:
       name: Temperature low Target
       description: If no one is home or at night set temp to this setting.
       default: 16
