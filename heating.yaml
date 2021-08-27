@@ -33,12 +33,12 @@ blueprint:
     min_temp:
       name: Minimum Temp
       description: If temperature is below this value and someone is home, It turns heating on.
-      default: 15
+      default: 19
       selector:
         number:
           min: 15
           max: 25
-          step: 1
+          step: 0.5
           mode: slider
     set_temp:
       name: Temperature Target
@@ -48,8 +48,18 @@ blueprint:
         number:
           min: 15
           max: 25
-          step: 1
+          step: 0.5
           mode: slider
+    lowset_temp:
+      name: Temperature low Target
+      description: If no one is home or at night set temp to this setting.
+      default: 16
+      selector:
+        number:
+          min: 15
+          max: 25
+          step: 0.5
+          mode: slider       
     time_after:
       name: Time After
       description: After this time the heating turns on, so it's warm in the morning
@@ -66,6 +76,7 @@ blueprint:
 variables:
   set_temp: !input set_temp
   min_temp: !input min_temp
+  setlog_temp: !input setlow_temp
 
 trigger:
   - platform: homeassistant
@@ -103,6 +114,6 @@ action:
         data:
           entity_id: !input 'heating'
           hvac_mode: heat
-          temperature: "{{ min_temp }}"
+          temperature: "{{ setlow_temp }}"
 
 mode: single
