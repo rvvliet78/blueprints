@@ -30,6 +30,20 @@ blueprint:
       selector:
         entity:
           domain: person
+    person3:
+      name: Person 3
+      description: The third person that has to be home.
+      default: []
+      selector:
+        entity:
+          domain: person
+    person4:
+      name: Person 4
+      description: The fourth person that has to be home.
+      default: []
+      selector:
+        entity:
+          domain: person
     min_temp:
       name: Minimum Temp
       description: If temperature is below this value and someone is home, It turns heating on.
@@ -102,6 +116,12 @@ action:
                 state: home
               - condition: state
                 entity_id: !input 'person2'
+                state: home
+              - condition: state
+                entity_id: !input 'person3'
+                state: home
+              - condition: state
+                entity_id: !input 'person4'
                 state: home
         sequence:
           - service: climate.set_temperature
