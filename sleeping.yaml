@@ -10,6 +10,12 @@ blueprint:
       selector:
         entity:
           domain: light
+    sleep_toggle:
+      name: Sleep true
+      description: If sleeping set this toggle to true
+      selector:
+        entity:
+          domain: input_boolean
     time_after:
       name: Time After
       description: After this time the heating turns on, so it's warm in the morning
@@ -41,3 +47,27 @@ trigger:
     event_type: automation_reloaded
   - platform: time_pattern
     minutes: /10
+
+action:
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: !input 'light_1'
+            state: "off"
+          - condition: time
+            before: !input 'time_before'
+            after: !input 'time_after'
+        sequence:
+          - service: toggle
+            data:
+              entity_id: !input 'sleep_toggle'
+              state: true
+              
+    default:
+      - service: climate.set_temperature
+        data:
+          entity_id: !input 'heating'
+          hvac_mode: heat
+          temperature: "{{ setlow_temp }}"
+
+mode: single
