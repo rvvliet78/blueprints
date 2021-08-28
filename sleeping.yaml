@@ -1,1 +1,43 @@
+#wip
+blueprint:
+  name: Heating Control
+  description: Control your heating with options for person home, if temp is below a specific value, set temp, and heating between specific times.
+  domain: automation
+  input:
+    light_1:
+      name: Light 1
+      description: If this light is on I am probably still downstairs
+      selector:
+        entity:
+          domain: light
+    time_after:
+      name: Time After
+      description: After this time the heating turns on, so it's warm in the morning
+      default: '20:30:00'
+      selector:
+        time:
+    time_before:
+      name: Time Before
+      description: After this time the heating turns off, This to prevent the heating is on in the middle of the night
+      default: '06:00:00'
+      selector:
+        time:
+    sunset_offset:
+      name: As the light go on with an offset of the sunset, you can define it here
+      description: Define offset to sunset
+      default: -60
+      selector:
+        number:
+          min: -240
+          max: 240
+          unit_of_measurement: minutes
+variables:
+  sunset_offset: !input sunset_offset
 
+trigger:
+  - platform: homeassistant
+    event: start
+  - platform: event
+    event_type: automation_reloaded
+  - platform: time_pattern
+    minutes: /10
